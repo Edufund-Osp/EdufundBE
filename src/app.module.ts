@@ -7,6 +7,8 @@ import { RolesModule } from './roles/roles.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CampaignModule } from './campaign/campaign.module';
+import { WalletModule } from './wallet/wallet.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     UsersModule,
     RolesModule,
     AuthModule,
+    CampaignModule,
+    WalletModule,
   ],
   controllers: [AppController],
   providers: [AppService],
