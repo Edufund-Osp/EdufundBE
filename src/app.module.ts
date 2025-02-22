@@ -12,7 +12,10 @@ import { WalletModule } from './wallet/wallet.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),  // Load .env file
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     MongooseModule.forRoot(process.env.MONGODB_URI as string),
     ThrottlerModule.forRoot([{
       // ttl: time to live in milliseconds

@@ -7,7 +7,7 @@ export type RoleDocument = Role & Document;
 export class Role {
   _id: Types.ObjectId;
   
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true, unique: true, enum: ['admin', 'organization', 'donor'] })
   name: string;
 }
 

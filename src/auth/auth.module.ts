@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { RolesService } from 'src/roles/roles.service';
 import { UsersModule } from '../users/users.module';
 import { RolesModule } from 'src/roles/roles.module';
@@ -9,10 +9,15 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { UsersService } from 'src/users/users.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '../users/users.schema';
+import { User, UserSchema } from '../users/schemas/users.schema';
 import { Role, RoleSchema } from 'src/roles/roles.schema';
 import { AuthController } from './auth.controller';
 import { ConfigModule } from '@nestjs/config';
+import { APP_PIPE } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { Profile, ProfileSchema } from 'src/users/schemas/profile.schema';
+import { GeoIPService } from './services/geoip/geoip.service';
+
 
 @Module({
   imports: [
@@ -22,6 +27,7 @@ import { ConfigModule } from '@nestjs/config';
     PassportModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
+      { name: Profile.name, schema: ProfileSchema },
       { name: Role.name, schema: RoleSchema },
     ]),
     JwtModule.register({
@@ -29,7 +35,14 @@ import { ConfigModule } from '@nestjs/config';
       signOptions: { expiresIn: '1h' },
     }),
   ],
-  providers: [AuthService, JwtStrategy, GoogleStrategy, RolesService, UsersService], // Add GoogleStrategy here
+  providers: [
+    AuthService, JwtStrategy, GoogleStrategy,
+    RolesService, UsersService, GeoIPService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    }
+  ], // Add GoogleStrategy here
   exports: [AuthService],
   controllers: [AuthController],
 })
